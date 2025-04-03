@@ -6,7 +6,6 @@ import Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// Update the metadata to reflect the new app name
 export const metadata = {
   title: "EasyCrib - Student Accommodation in Nigeria",
   description:
