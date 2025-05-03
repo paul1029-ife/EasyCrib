@@ -1,22 +1,39 @@
-import type { Metadata } from "next"
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Search, Filter, Home, CheckCircle, MapPin, Building, Shield, Clock, Users } from "lucide-react"
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Search,
+  Filter,
+  Home,
+  CheckCircle,
+  MapPin,
+  Building,
+  Shield,
+  Clock,
+  Users,
+} from "lucide-react";
 
 export const metadata: Metadata = {
   title: "How It Works | EasyCrib",
-  description: "Learn how EasyCrib helps you find the perfect student accommodation in Nigeria",
-}
+  description:
+    "Learn how EasyCrib helps you find the perfect student accommodation in Nigeria",
+};
 
 export default function HowItWorksPage() {
   const steps = [
     {
       icon: <Search className="h-16 w-16 text-primary" />,
       title: "Search",
-      description: "Enter your university or preferred location to find available student accommodations nearby.",
+      description:
+        "Enter your university or preferred location to find available student accommodations nearby.",
       details: [
         "Use our smart search to find accommodations near specific universities",
         "Search by neighborhood, city, or landmark",
@@ -40,7 +57,8 @@ export default function HowItWorksPage() {
     {
       icon: <Home className="h-16 w-16 text-primary" />,
       title: "Explore",
-      description: "Browse detailed listings with photos, amenities, and proximity to important locations.",
+      description:
+        "Browse detailed listings with photos, amenities, and proximity to important locations.",
       details: [
         "View high-quality photos of each property",
         "Check detailed descriptions of amenities and features",
@@ -52,7 +70,8 @@ export default function HowItWorksPage() {
     {
       icon: <CheckCircle className="h-16 w-16 text-primary" />,
       title: "Book",
-      description: "Contact landlords directly and secure your perfect student accommodation.",
+      description:
+        "Contact landlords directly and secure your perfect student accommodation.",
       details: [
         "Connect directly with verified landlords or agents",
         "Schedule viewing appointments through our platform",
@@ -61,7 +80,7 @@ export default function HowItWorksPage() {
         "Receive move-in instructions and support",
       ],
     },
-  ]
+  ];
 
   const faqs = [
     {
@@ -94,7 +113,7 @@ export default function HowItWorksPage() {
       answer:
         "EasyCrib provides support for any issues that may arise. You can contact our customer service team through the help center, and we'll assist in resolving any problems between you and the landlord.",
     },
-  ]
+  ];
 
   const testimonials = [
     {
@@ -118,7 +137,7 @@ export default function HowItWorksPage() {
         "The filter options are amazing! I could specify exactly what I wanted - water supply, generator, security - and found my perfect match.",
       avatar: "/placeholder.svg",
     },
-  ]
+  ];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -128,9 +147,12 @@ export default function HowItWorksPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">How EasyCrib Works</h1>
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                  How EasyCrib Works
+                </h1>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Finding your perfect student accommodation is simple and stress-free with our easy-to-follow process.
+                  Finding your perfect student accommodation is simple and
+                  stress-free with our easy-to-follow process.
                 </p>
               </div>
             </div>
@@ -142,13 +164,24 @@ export default function HowItWorksPage() {
           <div className="container px-4 md:px-6">
             <div className="grid gap-12">
               {steps.map((step, index) => (
-                <div key={index} className="grid md:grid-cols-2 gap-6 items-center">
-                  <div className={`space-y-4 ${index % 2 === 1 ? "md:order-2" : ""}`}>
-                    <div className="inline-block p-4 bg-secondary rounded-xl">{step.icon}</div>
+                <div
+                  key={index}
+                  className="grid md:grid-cols-2 gap-6 items-center"
+                >
+                  <div
+                    className={`space-y-4 ${
+                      index % 2 === 1 ? "md:order-2" : ""
+                    }`}
+                  >
+                    <div className="inline-block p-4 bg-secondary rounded-xl">
+                      {step.icon}
+                    </div>
                     <h2 className="text-3xl font-bold">
                       {index + 1}. {step.title}
                     </h2>
-                    <p className="text-xl text-muted-foreground">{step.description}</p>
+                    <p className="text-xl text-muted-foreground">
+                      {step.description}
+                    </p>
                     <ul className="space-y-2">
                       {step.details.map((detail, i) => (
                         <li key={i} className="flex items-start">
@@ -159,7 +192,9 @@ export default function HowItWorksPage() {
                     </ul>
                   </div>
                   <div
-                    className={`bg-muted rounded-xl aspect-video relative overflow-hidden ${index % 2 === 1 ? "md:order-1" : ""}`}
+                    className={`bg-muted rounded-xl aspect-video relative overflow-hidden ${
+                      index % 2 === 1 ? "md:order-1" : ""
+                    }`}
                   >
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="p-8 text-center">
@@ -181,9 +216,12 @@ export default function HowItWorksPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Why Choose EasyCrib?</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                  Why Choose EasyCrib?
+                </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  We make finding student accommodation easier than ever with these powerful features.
+                  We make finding student accommodation easier than ever with
+                  these powerful features.
                 </p>
               </div>
             </div>
@@ -194,8 +232,8 @@ export default function HowItWorksPage() {
                   <MapPin className="h-12 w-12 text-primary" />
                   <h3 className="text-xl font-bold">Location-Based Search</h3>
                   <p className="text-muted-foreground">
-                    Find accommodation near your specific university or preferred neighborhood with our precise location
-                    search.
+                    Find accommodation near your specific university or
+                    preferred neighborhood with our precise location search.
                   </p>
                 </CardContent>
               </Card>
@@ -204,8 +242,9 @@ export default function HowItWorksPage() {
                   <Building className="h-12 w-12 text-primary" />
                   <h3 className="text-xl font-bold">Verified Listings</h3>
                   <p className="text-muted-foreground">
-                    All properties on EasyCrib are verified to ensure you're getting accurate information and dealing
-                    with legitimate landlords.
+                    All properties on EasyCrib are verified to ensure you're
+                    getting accurate information and dealing with legitimate
+                    landlords.
                   </p>
                 </CardContent>
               </Card>
@@ -214,8 +253,8 @@ export default function HowItWorksPage() {
                   <Shield className="h-12 w-12 text-primary" />
                   <h3 className="text-xl font-bold">Safety First</h3>
                   <p className="text-muted-foreground">
-                    We prioritize your safety with detailed information about security features and safe neighborhoods
-                    for students.
+                    We prioritize your safety with detailed information about
+                    security features and safe neighborhoods for students.
                   </p>
                 </CardContent>
               </Card>
@@ -224,7 +263,8 @@ export default function HowItWorksPage() {
                   <Clock className="h-12 w-12 text-primary" />
                   <h3 className="text-xl font-bold">Quick Process</h3>
                   <p className="text-muted-foreground">
-                    Our streamlined process helps you find and secure accommodation quickly, saving you time and stress.
+                    Our streamlined process helps you find and secure
+                    accommodation quickly, saving you time and stress.
                   </p>
                 </CardContent>
               </Card>
@@ -233,8 +273,8 @@ export default function HowItWorksPage() {
                   <Filter className="h-12 w-12 text-primary" />
                   <h3 className="text-xl font-bold">Advanced Filters</h3>
                   <p className="text-muted-foreground">
-                    Use our detailed filters to find exactly what you need - from amenities to price range and property
-                    type.
+                    Use our detailed filters to find exactly what you need -
+                    from amenities to price range and property type.
                   </p>
                 </CardContent>
               </Card>
@@ -243,8 +283,8 @@ export default function HowItWorksPage() {
                   <Users className="h-12 w-12 text-primary" />
                   <h3 className="text-xl font-bold">Student Community</h3>
                   <p className="text-muted-foreground">
-                    Connect with other students, read reviews, and get insights from those who have lived in the
-                    properties.
+                    Connect with other students, read reviews, and get insights
+                    from those who have lived in the properties.
                   </p>
                 </CardContent>
               </Card>
@@ -257,9 +297,12 @@ export default function HowItWorksPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Student Success Stories</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                  Student Success Stories
+                </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Hear from students who found their perfect accommodation through EasyCrib.
+                  Hear from students who found their perfect accommodation
+                  through EasyCrib.
                 </p>
               </div>
             </div>
@@ -279,7 +322,9 @@ export default function HowItWorksPage() {
                       </div>
                       <div>
                         <h3 className="font-bold">{testimonial.name}</h3>
-                        <p className="text-sm text-muted-foreground">{testimonial.university}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {testimonial.university}
+                        </p>
                       </div>
                     </div>
                     <p className="italic">"{testimonial.quote}"</p>
@@ -299,7 +344,8 @@ export default function HowItWorksPage() {
                   Frequently Asked Questions
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Get answers to common questions about finding student accommodation with EasyCrib.
+                  Get answers to common questions about finding student
+                  accommodation with EasyCrib.
                 </p>
               </div>
             </div>
@@ -308,7 +354,9 @@ export default function HowItWorksPage() {
               <Accordion type="single" collapsible className="w-full">
                 {faqs.map((faq, index) => (
                   <AccordionItem key={index} value={`item-${index}`}>
-                    <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
+                    <AccordionTrigger className="text-left">
+                      {faq.question}
+                    </AccordionTrigger>
                     <AccordionContent>{faq.answer}</AccordionContent>
                   </AccordionItem>
                 ))}
@@ -326,7 +374,8 @@ export default function HowItWorksPage() {
                   Ready to Find Your Perfect Student Home?
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Start your search now and discover comfortable, affordable accommodation near your university.
+                  Start your search now and discover comfortable, affordable
+                  accommodation near your university.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -346,6 +395,5 @@ export default function HowItWorksPage() {
         </section>
       </main>
     </div>
-  )
+  );
 }
-

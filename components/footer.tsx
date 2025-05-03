@@ -1,7 +1,7 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Facebook, Instagram, Twitter } from "lucide-react"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Facebook, Instagram, Twitter } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -11,7 +11,8 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">EasyCrib</h3>
             <p className="text-sm text-muted-foreground">
-              Finding comfortable and affordable student accommodation across Nigeria made easy.
+              Finding comfortable and affordable student accommodation across
+              Nigeria made easy.
             </p>
             <div className="flex space-x-4">
               <Button variant="ghost" size="icon">
@@ -100,10 +101,11 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} EasyCrib. All rights reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()} EasyCrib. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
-  )
+  );
 }
-
