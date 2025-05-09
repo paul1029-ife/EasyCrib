@@ -1,34 +1,34 @@
 export type Listing = {
-  id: string
-  title: string
-  description: string
-  price: number
-  paymentPeriod: string
-  location: string
-  images: string[]
-  bedrooms: number
-  bathrooms: number
-  propertyType: string
-  nearestUniversity: string
-  distanceToUniversity: string
-  availableFrom: string
-  minimumStay: string
-  deposit: number
-  billsIncluded: boolean
-  internet: string
-  furnishing: string
-  parking: string
-  amenities: string[]
-  security: string[]
-  tags: string[]
-  landlord: string
-  responseRate: string
-  locationDescription: string
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  paymentPeriod: string;
+  location: string;
+  images: string[];
+  bedrooms: number;
+  bathrooms: number;
+  propertyType: string;
+  nearestUniversity: string;
+  distanceToUniversity: string;
+  availableFrom: string;
+  minimumStay: string;
+  deposit: number;
+  billsIncluded: boolean;
+  internet: string;
+  furnishing: string;
+  parking: string;
+  amenities: string[];
+  security: string[];
+  tags: string[];
+  landlord: string;
+  responseRate: string;
+  locationDescription: string;
   nearbyFacilities: Array<{
-    name: string
-    distance: string
-  }>
-}
+    name: string;
+    distance: string;
+  }>;
+};
 
 // Mock data
 const mockListings: Listing[] = [
@@ -40,12 +40,18 @@ const mockListings: Listing[] = [
     price: 250000,
     paymentPeriod: "year",
     location: "23 University Road, Akoka, Lagos",
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+    ],
     bedrooms: 1,
     bathrooms: 1,
-    propertyType: "Self-Contain",
-    nearestUniversity: "University of Lagos",
-    distanceToUniversity: "5 min walk",
+    propertyType: "Self Contain",
+    nearestUniversity: "University of Lagos (UNILAG)",
+    distanceToUniversity: "0.5",
     availableFrom: "September 1, 2023",
     minimumStay: "1 year",
     deposit: 250000,
@@ -54,16 +60,22 @@ const mockListings: Listing[] = [
     furnishing: "Partially furnished",
     parking: "Compound parking available",
     amenities: [
-      "Water supply",
-      "Partially furnished",
-      "Prepaid meter",
-      "Study desk",
-      "Kitchenette",
-      "Ceiling fan",
-      "Wardrobe",
+      "Water Supply",
+      "24/7 Electricity",
+      "Security",
+      "Internet",
+      "Parking",
+      "Furnished",
+      "Air Conditioning",
+      "Study Room",
     ],
-    security: ["Gated compound", "Security guard", "Burglary proof", "On-site caretaker"],
-    tags: ["Self-Contain", "Near Campus", "Prepaid Meter", "Furnished"],
+    security: [
+      "Gated compound",
+      "Security guard",
+      "Burglary proof",
+      "On-site caretaker",
+    ],
+    tags: ["Self Contain", "Near Campus", "Prepaid Meter", "Furnished"],
     landlord: "Lagos Student Housing",
     responseRate: "95% within 24 hours",
     locationDescription:
@@ -91,29 +103,42 @@ const mockListings: Listing[] = [
     price: 600000,
     paymentPeriod: "year",
     location: "15 Moremi Street, Yaba, Lagos",
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+    ],
     bedrooms: 2,
-    bathrooms: 1,
+    bathrooms: 2,
     propertyType: "Flat",
-    nearestUniversity: "University of Lagos",
-    distanceToUniversity: "15 min walk",
+    nearestUniversity: "University of Lagos (UNILAG)",
+    distanceToUniversity: "1.5",
     availableFrom: "August 15, 2023",
     minimumStay: "1 year",
     deposit: 600000,
-    billsIncluded: false,
+    billsIncluded: true,
     internet: "Fiber optic available",
-    furnishing: "Partially furnished",
+    furnishing: "Furnished",
     parking: "Compound parking available",
     amenities: [
-      "Generator (12 hours daily)",
-      "Water tank",
-      "Prepaid electricity meter",
-      "Large wardrobes",
-      "Tiled floors",
-      "Ceiling fans",
-      "Balcony",
+      "Water Supply",
+      "24/7 Electricity",
+      "Security",
+      "Internet",
+      "Parking",
+      "Furnished",
+      "Air Conditioning",
+      "Swimming Pool",
+      "Gym",
     ],
-    security: ["Gated compound", "Security personnel", "Burglary proof windows", "Solid doors with good locks"],
+    security: [
+      "Gated compound",
+      "Security personnel",
+      "Burglary proof windows",
+      "Solid doors with good locks",
+    ],
     tags: ["2 Bedroom", "Generator", "Prepaid Meter", "Water Tank"],
     landlord: "Yaba Rentals",
     responseRate: "90% within 12 hours",
@@ -142,29 +167,40 @@ const mockListings: Listing[] = [
     price: 180000,
     paymentPeriod: "year",
     location: "7 Barika Close, Abule Oja, Lagos",
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+    ],
     bedrooms: 1,
-    bathrooms: 2,
-    propertyType: "Shared Apartment",
-    nearestUniversity: "University of Lagos",
-    distanceToUniversity: "10 min walk",
+    bathrooms: 1,
+    propertyType: "Single Room",
+    nearestUniversity: "University of Lagos (UNILAG)",
+    distanceToUniversity: "1.0",
     availableFrom: "September 1, 2023",
     minimumStay: "1 year",
     deposit: 180000,
     billsIncluded: true,
     internet: "WiFi included",
-    furnishing: "Furnished bedroom",
+    furnishing: "Furnished",
     parking: "Limited street parking",
     amenities: [
-      "Shared kitchen",
-      "Small balcony",
-      "Prepaid electricity",
-      "Study desk",
-      "Living room with TV",
-      "Water tank",
-      "Ceiling fans",
+      "Water Supply",
+      "24/7 Electricity",
+      "Security",
+      "Internet",
+      "Parking",
+      "Furnished",
+      "Study Room",
     ],
-    security: ["Gated compound", "Burglary proof", "Lockable bedroom doors", "Security lights"],
+    security: [
+      "Gated compound",
+      "Burglary proof",
+      "Lockable bedroom doors",
+      "Security lights",
+    ],
     tags: ["Private Room", "Shared Apartment", "Bills Included", "Near Campus"],
     landlord: "Student Living Co-op",
     responseRate: "98% within 6 hours",
@@ -193,27 +229,36 @@ const mockListings: Listing[] = [
     price: 950000,
     paymentPeriod: "year",
     location: "25 Herbert Macaulay Way, Sabo, Lagos",
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+    ],
     bedrooms: 1,
     bathrooms: 1,
-    propertyType: "Premium Apartment",
-    nearestUniversity: "University of Lagos",
-    distanceToUniversity: "20 min walk",
+    propertyType: "Mini Flat",
+    nearestUniversity: "University of Lagos (UNILAG)",
+    distanceToUniversity: "2.0",
     availableFrom: "August 20, 2023",
     minimumStay: "1 year",
     deposit: 950000,
     billsIncluded: true,
     internet: "High-speed fiber internet",
-    furnishing: "Fully furnished",
+    furnishing: "Furnished",
     parking: "Secure parking available",
     amenities: [
-      "24/7 power supply",
-      "Air conditioning",
-      "Water heater",
-      "Study area",
-      "In-building laundry",
-      "Smart home features",
-      "DSTV connection",
+      "Water Supply",
+      "24/7 Electricity",
+      "Security",
+      "Internet",
+      "Parking",
+      "Furnished",
+      "Air Conditioning",
+      "Swimming Pool",
+      "Gym",
+      "Study Room",
     ],
     security: [
       "24/7 security personnel",
@@ -250,12 +295,18 @@ const mockListings: Listing[] = [
     price: 120000,
     paymentPeriod: "year",
     location: "10 Abeokuta Street, Iwaya, Lagos",
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+    ],
     bedrooms: 1,
-    bathrooms: 2,
+    bathrooms: 1,
     propertyType: "Face-Me-I-Face-You",
-    nearestUniversity: "University of Lagos",
-    distanceToUniversity: "15 min walk",
+    nearestUniversity: "University of Lagos (UNILAG)",
+    distanceToUniversity: "1.5",
     availableFrom: "September 1, 2023",
     minimumStay: "1 year",
     deposit: 120000,
@@ -263,16 +314,13 @@ const mockListings: Listing[] = [
     internet: "Not included",
     furnishing: "Not furnished",
     parking: "Limited street parking",
-    amenities: [
-      "Shared kitchen",
-      "Shared bathroom",
-      "Ceiling fan",
-      "Water from well",
-      "Prepaid electricity meter",
-      "Small veranda",
-      "Community environment",
+    amenities: ["Water Supply", "Security"],
+    security: [
+      "Compound gate",
+      "Burglary proof windows",
+      "Community vigilance",
+      "Lockable doors",
     ],
-    security: ["Compound gate", "Burglary proof windows", "Community vigilance", "Lockable doors"],
     tags: ["Budget", "Single Room", "Shared Facilities", "Close to Campus"],
     landlord: "Iwaya Properties",
     responseRate: "90% within 24 hours",
@@ -301,12 +349,18 @@ const mockListings: Listing[] = [
     price: 350000,
     paymentPeriod: "year",
     location: "5 Alagomeji Street, Yaba, Lagos",
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+      "/placeholder.svg",
+    ],
     bedrooms: 1,
     bathrooms: 1,
     propertyType: "Mini Flat",
-    nearestUniversity: "Yaba College of Technology",
-    distanceToUniversity: "10 min walk",
+    nearestUniversity: "Yaba College of Technology (YABATECH)",
+    distanceToUniversity: "1.0",
     availableFrom: "August 25, 2023",
     minimumStay: "1 year",
     deposit: 350000,
@@ -315,15 +369,19 @@ const mockListings: Listing[] = [
     furnishing: "Not furnished",
     parking: "Compound parking",
     amenities: [
-      "Reliable water supply",
-      "Prepaid electricity meter",
-      "Newly built",
-      "Tiled floors",
-      "Good ventilation",
-      "Private kitchen",
-      "Private bathroom",
+      "Water Supply",
+      "24/7 Electricity",
+      "Security",
+      "Internet",
+      "Parking",
+      "Study Room",
     ],
-    security: ["Gated compound", "Security lights", "Burglary proof", "Solid doors with good locks"],
+    security: [
+      "Gated compound",
+      "Security lights",
+      "Burglary proof",
+      "Solid doors with good locks",
+    ],
     tags: ["Mini Flat", "Newly Built", "Water Supply", "Prepaid Meter"],
     landlord: "Yaba Modern Homes",
     responseRate: "95% within 12 hours",
@@ -344,25 +402,24 @@ const mockListings: Listing[] = [
       },
     ],
   },
-]
+];
 
 // Helper functions to retrieve data
 export function getListings(): Listing[] {
-  return mockListings
+  return mockListings;
 }
 
 export function getFeaturedListings(): Listing[] {
   // In a real app, you might have a featured flag or algorithm
-  return mockListings.slice(0, 3)
+  return mockListings.slice(0, 3);
 }
 
 export function getListingById(id: string): Listing | undefined {
-  return mockListings.find((listing) => listing.id === id)
+  return mockListings.find((listing) => listing.id === id);
 }
 
 export function getSimilarListings(currentId: string): Listing[] {
   // In a real app, you would have an algorithm to find similar listings
   // For now, just return other listings
-  return mockListings.filter((listing) => listing.id !== currentId).slice(0, 3)
+  return mockListings.filter((listing) => listing.id !== currentId).slice(0, 3);
 }
-

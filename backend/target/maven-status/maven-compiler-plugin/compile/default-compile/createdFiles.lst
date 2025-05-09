@@ -1,0 +1,6 @@
+com\easycrib\model\House.class
+com\easycrib\EasyCribApplication.class
+com\easycrib\repository\HouseRepository.class
+com\easycrib\controller\HouseController.class
+com\easycrib\controller\HomeController.class
+com\easycrib\controller\ErrorController.class

@@ -1,19 +1,80 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Bed, Bath, MapPin, Home } from "lucide-react";
 import { getListings } from "@/lib/data";
+import { useFilters } from "@/lib/filters-context";
 
 export default function ListingsGrid() {
-  // In a real app, this would fetch from an API or database with filters applied
-  const listings = getListings();
+  const { filters } = useFilters();
+  const allListings = getListings();
+
+  const filteredListings = allListings.filter((listing) => {
+    // Price range filter
+    if (
+      listing.price < filters.priceRange[0] ||
+      listing.price > filters.priceRange[1]
+    ) {
+      return false;
+    }
+
+    // Bills included filter
+    if (filters.billsIncluded && !listing.billsIncluded) {
+      return false;
+    }
+
+    // University filter
+    if (
+      filters.university !== "Any University" &&
+      listing.nearestUniversity !== filters.university
+    ) {
+      return false;
+    }
+
+    // Distance to university filter
+    const listingDistance = parseFloat(listing.distanceToUniversity.toString());
+    if (listingDistance > filters.distanceToUniversity) {
+      return false;
+    }
+
+    // Property type filter
+    if (
+      filters.propertyTypes.length > 0 &&
+      !filters.propertyTypes.includes(listing.propertyType)
+    ) {
+      return false;
+    }
+
+    // Bedrooms filter
+    if (filters.bedrooms > 0 && listing.bedrooms < filters.bedrooms) {
+      return false;
+    }
+
+    // Bathrooms filter
+    if (filters.bathrooms > 0 && listing.bathrooms < filters.bathrooms) {
+      return false;
+    }
+
+    // Amenities filter
+    if (filters.amenities.length > 0) {
+      const hasAllAmenities = filters.amenities.every((amenity) =>
+        listing.amenities.includes(amenity)
+      );
+      if (!hasAllAmenities) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 
   return (
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <p className="text-muted-foreground font-medium">
-          {listings.length} properties found
+          {filteredListings.length} properties found
         </p>
         <div className="w-full sm:w-auto">
           <select className="w-full sm:w-auto p-2 text-sm border rounded-md bg-background">
@@ -27,7 +88,7 @@ export default function ListingsGrid() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {listings.map((listing) => (
+        {filteredListings.map((listing) => (
           <Link
             key={listing.id}
             href={`/listings/${listing.id}`}

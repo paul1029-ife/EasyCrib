@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,13 +11,69 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useFilters } from "@/lib/filters-context";
 
 export default function ListingsFilters() {
+  const { filters, setFilters, clearFilters } = useFilters();
+
+  const handlePriceRangeChange = (value: number[]) => {
+    setFilters({ priceRange: value as [number, number] });
+  };
+
+  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    setFilters({ priceRange: [value, filters.priceRange[1]] });
+  };
+
+  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    setFilters({ priceRange: [filters.priceRange[0], value] });
+  };
+
+  const handleBillsIncludedChange = (checked: boolean) => {
+    setFilters({ billsIncluded: checked });
+  };
+
+  const handleUniversityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilters({ university: e.target.value });
+  };
+
+  const handleDistanceChange = (value: number[]) => {
+    setFilters({ distanceToUniversity: value[0] });
+  };
+
+  const handlePropertyTypeChange = (type: string, checked: boolean) => {
+    const newTypes = checked
+      ? [...filters.propertyTypes, type]
+      : filters.propertyTypes.filter((t) => t !== type);
+    setFilters({ propertyTypes: newTypes });
+  };
+
+  const handleBedroomsChange = (value: number) => {
+    setFilters({ bedrooms: value });
+  };
+
+  const handleBathroomsChange = (value: number) => {
+    setFilters({ bathrooms: value });
+  };
+
+  const handleAmenityChange = (amenity: string, checked: boolean) => {
+    const newAmenities = checked
+      ? [...filters.amenities, amenity]
+      : filters.amenities.filter((a) => a !== amenity);
+    setFilters({ amenities: newAmenities });
+  };
+
   return (
     <div className="space-y-6">
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-4">Filters</h2>
-        <Button variant="outline" size="sm" className="w-full">
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full"
+          onClick={clearFilters}
+        >
           Clear All Filters
         </Button>
       </div>
@@ -32,7 +90,8 @@ export default function ListingsFilters() {
           <AccordionContent>
             <div className="space-y-6 pt-3 pb-2">
               <Slider
-                defaultValue={[200000, 600000]}
+                value={filters.priceRange}
+                onValueChange={handlePriceRangeChange}
                 min={0}
                 max={1000000}
                 step={50000}
@@ -54,7 +113,8 @@ export default function ListingsFilters() {
                       id="min-price"
                       type="number"
                       className="pl-6"
-                      defaultValue={200000}
+                      value={filters.priceRange[0]}
+                      onChange={handleMinPriceChange}
                     />
                   </div>
                 </div>
@@ -73,13 +133,18 @@ export default function ListingsFilters() {
                       id="max-price"
                       type="number"
                       className="pl-6"
-                      defaultValue={600000}
+                      value={filters.priceRange[1]}
+                      onChange={handleMaxPriceChange}
                     />
                   </div>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <Checkbox id="bills-included" />
+                <Checkbox
+                  id="bills-included"
+                  checked={filters.billsIncluded}
+                  onCheckedChange={handleBillsIncludedChange}
+                />
                 <label
                   htmlFor="bills-included"
                   className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -104,6 +169,8 @@ export default function ListingsFilters() {
                 <select
                   id="university"
                   className="w-full p-2.5 text-sm border rounded-md bg-background"
+                  value={filters.university}
+                  onChange={handleUniversityChange}
                 >
                   <option>Any University</option>
                   <option>University of Lagos (UNILAG)</option>
@@ -119,7 +186,8 @@ export default function ListingsFilters() {
               <div className="space-y-4">
                 <Label className="text-sm">Distance to University</Label>
                 <Slider
-                  defaultValue={[2]}
+                  value={[filters.distanceToUniversity]}
+                  onValueChange={handleDistanceChange}
                   min={0}
                   max={10}
                   step={0.5}
@@ -127,7 +195,7 @@ export default function ListingsFilters() {
                 />
                 <div className="flex justify-between text-xs text-muted-foreground pt-1">
                   <span>0 miles</span>
-                  <span>Within 2 miles</span>
+                  <span>Within {filters.distanceToUniversity} miles</span>
                   <span>10+ miles</span>
                 </div>
               </div>
@@ -141,51 +209,29 @@ export default function ListingsFilters() {
           </AccordionTrigger>
           <AccordionContent>
             <div className="grid grid-cols-1 gap-3 pt-3 pb-2">
-              <div className="flex items-center space-x-3">
-                <Checkbox id="self-contain" />
-                <label
-                  htmlFor="self-contain"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Self Contain
-                </label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Checkbox id="flat" />
-                <label
-                  htmlFor="flat"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Flat
-                </label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Checkbox id="mini-flat" />
-                <label
-                  htmlFor="mini-flat"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Mini Flat
-                </label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Checkbox id="single-room" />
-                <label
-                  htmlFor="single-room"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Single Room
-                </label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Checkbox id="face-me-i-face-you" />
-                <label
-                  htmlFor="face-me-i-face-you"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Face-Me-I-Face-You
-                </label>
-              </div>
+              {[
+                "Self Contain",
+                "Flat",
+                "Mini Flat",
+                "Single Room",
+                "Face-Me-I-Face-You",
+              ].map((type) => (
+                <div key={type} className="flex items-center space-x-3">
+                  <Checkbox
+                    id={type.toLowerCase().replace(/\s+/g, "-")}
+                    checked={filters.propertyTypes.includes(type)}
+                    onCheckedChange={(checked) =>
+                      handlePropertyTypeChange(type, checked as boolean)
+                    }
+                  />
+                  <label
+                    htmlFor={type.toLowerCase().replace(/\s+/g, "-")}
+                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {type}
+                  </label>
+                </div>
+              ))}
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -199,39 +245,38 @@ export default function ListingsFilters() {
               <div className="space-y-3">
                 <Label className="text-sm">Bedrooms</Label>
                 <div className="grid grid-cols-5 gap-2">
-                  <Button variant="outline" size="sm" className="h-9">
-                    Any
-                  </Button>
-                  <Button variant="outline" size="sm" className="h-9">
-                    1+
-                  </Button>
-                  <Button variant="outline" size="sm" className="h-9">
-                    2+
-                  </Button>
-                  <Button variant="outline" size="sm" className="h-9">
-                    3+
-                  </Button>
-                  <Button variant="outline" size="sm" className="h-9">
-                    4+
-                  </Button>
+                  {[0, 1, 2, 3, 4].map((value) => (
+                    <Button
+                      key={value}
+                      variant={
+                        filters.bedrooms === value ? "default" : "outline"
+                      }
+                      size="sm"
+                      className="h-9"
+                      onClick={() => handleBedroomsChange(value)}
+                    >
+                      {value === 0 ? "Any" : `${value}+`}
+                    </Button>
+                  ))}
                 </div>
               </div>
 
               <div className="space-y-3">
                 <Label className="text-sm">Bathrooms</Label>
                 <div className="grid grid-cols-4 gap-2">
-                  <Button variant="outline" size="sm" className="h-9">
-                    Any
-                  </Button>
-                  <Button variant="outline" size="sm" className="h-9">
-                    1+
-                  </Button>
-                  <Button variant="outline" size="sm" className="h-9">
-                    2+
-                  </Button>
-                  <Button variant="outline" size="sm" className="h-9">
-                    3+
-                  </Button>
+                  {[0, 1, 2, 3].map((value) => (
+                    <Button
+                      key={value}
+                      variant={
+                        filters.bathrooms === value ? "default" : "outline"
+                      }
+                      size="sm"
+                      className="h-9"
+                      onClick={() => handleBathroomsChange(value)}
+                    >
+                      {value === 0 ? "Any" : `${value}+`}
+                    </Button>
+                  ))}
                 </div>
               </div>
             </div>
@@ -244,115 +289,38 @@ export default function ListingsFilters() {
           </AccordionTrigger>
           <AccordionContent>
             <div className="grid grid-cols-1 gap-3 pt-3 pb-2">
-              <div className="flex items-center space-x-3">
-                <Checkbox id="water-supply" />
-                <label
-                  htmlFor="water-supply"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Water Supply
-                </label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Checkbox id="generator" />
-                <label
-                  htmlFor="generator"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Generator
-                </label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Checkbox id="prepaid-meter" />
-                <label
-                  htmlFor="prepaid-meter"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Prepaid Meter
-                </label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Checkbox id="water-heater" />
-                <label
-                  htmlFor="water-heater"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Water Heater
-                </label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Checkbox id="furnished" />
-                <label
-                  htmlFor="furnished"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Furnished
-                </label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Checkbox id="ac" />
-                <label
-                  htmlFor="ac"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Air Conditioning
-                </label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Checkbox id="security" />
-                <label
-                  htmlFor="security"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Security
-                </label>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Checkbox id="tiled" />
-                <label
-                  htmlFor="tiled"
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Tiled Floors
-                </label>
-              </div>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="availability" className="border-b pb-1">
-          <AccordionTrigger className="py-2 hover:no-underline">
-            <span className="text-base font-medium">Availability</span>
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-5 pt-3 pb-2">
-              <div className="space-y-2">
-                <Label htmlFor="move-in-date" className="text-sm">
-                  Move-in Date
-                </Label>
-                <Input
-                  id="move-in-date"
-                  type="date"
-                  className="bg-background"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm">Minimum Stay</Label>
-                <select className="w-full p-2.5 text-sm border rounded-md bg-background">
-                  <option>Any</option>
-                  <option>3 months</option>
-                  <option>6 months</option>
-                  <option>9 months</option>
-                  <option>12 months</option>
-                </select>
-              </div>
+              {[
+                "Water Supply",
+                "24/7 Electricity",
+                "Security",
+                "Internet",
+                "Parking",
+                "Furnished",
+                "Air Conditioning",
+                "Swimming Pool",
+                "Gym",
+                "Study Room",
+              ].map((amenity) => (
+                <div key={amenity} className="flex items-center space-x-3">
+                  <Checkbox
+                    id={amenity.toLowerCase().replace(/\s+/g, "-")}
+                    checked={filters.amenities.includes(amenity)}
+                    onCheckedChange={(checked) =>
+                      handleAmenityChange(amenity, checked as boolean)
+                    }
+                  />
+                  <label
+                    htmlFor={amenity.toLowerCase().replace(/\s+/g, "-")}
+                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {amenity}
+                  </label>
+                </div>
+              ))}
             </div>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-
-      <Button className="w-full mt-8">Apply Filters</Button>
     </div>
   );
 }
