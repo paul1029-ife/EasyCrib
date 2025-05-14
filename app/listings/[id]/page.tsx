@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,17 +16,25 @@ import {
   Clock,
   MapPin,
   School,
-  Shield,
+  Loader2,
 } from "lucide-react";
-import { getListingById } from "@/lib/data";
+import { useProperty } from "@/lib/hooks/use-properties";
 import SimilarListings from "@/components/similar-listings";
 import { useParams } from "next/navigation";
 
 export default function ListingDetailPage() {
   const params = useParams<{ id: string }>();
-  const listing = getListingById(params.id || "1");
+  const { data: listing, isLoading, error } = useProperty(Number(params.id));
 
-  if (!listing) {
+  if (isLoading) {
+    return (
+      <div className="container px-4 md:px-6 py-8 md:py-12 flex flex-col items-center justify-center min-h-[50vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error || !listing) {
     return (
       <div className="container px-4 md:px-6 py-8 md:py-12 flex flex-col items-center justify-center min-h-[50vh]">
         <h1 className="text-2xl font-bold">Listing not found</h1>
@@ -53,7 +62,7 @@ export default function ListingDetailPage() {
         <div className="lg:col-span-2 space-y-8">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
-              {listing.title}
+              {listing.name}
             </h1>
             <div className="flex items-center mt-2 space-x-2">
               <MapPin className="h-4 w-4 text-muted-foreground" />
@@ -67,31 +76,26 @@ export default function ListingDetailPage() {
 
           <div className="aspect-[16/9] overflow-hidden rounded-lg relative">
             <Image
-              src={listing.images[0] || "/placeholder.svg"}
-              alt={listing.title}
+              src={listing.imageUrl || "/placeholder.svg"}
+              alt={listing.name}
               fill
               className="object-cover"
             />
           </div>
 
           <div className="grid grid-cols-4 gap-2">
-            {listing.images.slice(1, 5).map((image, index) => (
-              <div
-                key={index}
-                className="aspect-square overflow-hidden rounded-lg relative"
-              >
-                <Image
-                  src={image || "/placeholder.svg"}
-                  alt={`${listing.title} - image ${index + 2}`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            ))}
+            <div className="aspect-square overflow-hidden rounded-lg relative">
+              <Image
+                src={listing.imageUrl || "/placeholder.svg"}
+                alt={`${listing.name}`}
+                fill
+                className="object-cover"
+              />
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {listing.tags.map((tag, index) => (
+            {listing.amenities.map((tag, index) => (
               <Badge key={index} variant="secondary">
                 {tag}
               </Badge>
@@ -132,7 +136,7 @@ export default function ListingDetailPage() {
                 <div className="flex flex-col items-center justify-center p-4 bg-muted rounded-lg">
                   <Clock className="h-6 w-6 mb-2" />
                   <span className="text-sm font-medium">
-                    Available {listing.availableFrom}
+                    Available {listing.propertyType}
                   </span>
                 </div>
               </div>
@@ -147,20 +151,10 @@ export default function ListingDetailPage() {
                   </div>
                 ))}
               </div>
-
-              <h2 className="text-xl font-semibold mt-6">Security Features</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {listing.security.map((item, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-primary" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
             </TabsContent>
             <TabsContent value="location" className="space-y-4 pt-4">
               <h2 className="text-xl font-semibold">Location</h2>
-              <p>{listing.locationDescription}</p>
+              <p>{listing.location}</p>
 
               <div className="aspect-[16/9] bg-muted rounded-lg flex items-center justify-center mt-4">
                 <div className="text-center p-4">
@@ -203,10 +197,10 @@ export default function ListingDetailPage() {
             <CardContent className="p-6">
               <div className="space-y-4">
                 <div className="flex items-baseline justify-between">
-                  <div className="text-3xl font-bold">₦{listing.price}</div>
-                  <div className="text-muted-foreground">
-                    per {listing.paymentPeriod}
+                  <div className="text-3xl font-bold">
+                    ₦{listing.price.toLocaleString()}
                   </div>
+                  <div className="text-muted-foreground">per month</div>
                 </div>
 
                 <Separator />
@@ -225,8 +219,8 @@ export default function ListingDetailPage() {
                 </Button>
 
                 <div className="text-sm text-muted-foreground">
-                  <p>Listed by {listing.landlord}</p>
-                  <p>Response rate: {listing.responseRate}</p>
+                  <p>Listed by {listing.landlord.name}</p>
+                  <p>Response rate: {listing.landlord.responseRate}</p>
                 </div>
               </div>
             </CardContent>

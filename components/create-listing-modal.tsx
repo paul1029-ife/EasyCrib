@@ -1,9 +1,17 @@
 "use client";
-import { Home, DollarSign, MapPin, FileText, X, Upload } from "lucide-react";
+import {
+  Home,
+  DollarSign,
+  MapPin,
+  FileText,
+  X,
+  Upload,
+  Loader2,
+} from "lucide-react";
 import { useForm, Controller, ControllerRenderProps } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CldUploadWidget } from "next-cloudinary";
+import { useState } from "react";
 
 import {
   Dialog,
@@ -25,7 +33,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useCreateProperty } from "@/lib/hooks/use-properties";
+import { useCreateProperty, PropertyType } from "@/lib/hooks/use-properties";
+import { toast } from "sonner";
+
 // Define the form schema using Zod
 const propertySchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -38,9 +48,40 @@ const propertySchema = z.object({
   location: z.string().min(1, "Location is required"),
   bedrooms: z.string().optional(),
   bathrooms: z.string().optional(),
-  propertyType: z.string().min(1, "Property type is required"),
+  propertyType: z.enum(["House", "Apartment", "Condo", "Townhouse", "Land"]),
   amenities: z.array(z.string()),
   imageUrl: z.string().optional(),
+  paymentPeriod: z.enum(["month", "year", "semester"]),
+  furnishing: z.enum(["Furnished", "Unfurnished", "Partially Furnished"]),
+  internet: z.enum(["Included", "Available", "Not Available"]),
+  parking: z.enum(["Available", "Not Available", "Street Parking"]),
+  billsIncluded: z.boolean(),
+  deposit: z
+    .string()
+    .refine((val: string) => !isNaN(Number(val)) && Number(val) >= 0, {
+      message: "Please enter a valid deposit amount",
+    }),
+  minimumStay: z
+    .string()
+    .refine((val: string) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: "Please enter a valid minimum stay period",
+    }),
+  availableFrom: z.string().min(1, "Available from date is required"),
+  landlord: z.object({
+    name: z.string().min(1, "Landlord name is required"),
+    phone: z.string().min(1, "Landlord phone number is required"),
+    responseRate: z.number().min(0).max(100),
+    responseTime: z.string(),
+  }),
+  distanceToUniversity: z.string().min(1, "Distance to university is required"),
+  nearestUniversity: z.string().min(1, "Nearest university is required"),
+  nearbyFacilities: z.array(
+    z.object({
+      name: z.string(),
+      distance: z.string(),
+      type: z.string(),
+    })
+  ),
 });
 
 type PropertyFormData = z.infer<typeof propertySchema>;
@@ -54,6 +95,9 @@ export default function CreateListingModal({
   isOpen,
   onClose,
 }: CreateListingModalProps) {
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
   const {
     control,
     handleSubmit,
@@ -67,10 +111,26 @@ export default function CreateListingModal({
       price: "",
       location: "",
       bedrooms: "",
-      imageUrl: "",
       bathrooms: "",
-      propertyType: "",
+      propertyType: "House",
       amenities: [],
+      imageUrl: "",
+      paymentPeriod: "month",
+      furnishing: "Unfurnished",
+      internet: "Not Available",
+      parking: "Not Available",
+      billsIncluded: false,
+      deposit: "",
+      minimumStay: "",
+      availableFrom: "",
+      landlord: {
+        name: "",
+        responseRate: 0,
+        responseTime: "24 hours",
+      },
+      distanceToUniversity: "",
+      nearestUniversity: "",
+      nearbyFacilities: [],
     },
   });
 
@@ -91,21 +151,59 @@ export default function CreateListingModal({
   const propertyTypes = [
     "House",
     "Apartment",
+    "Hostel",
     "Condo",
     "Townhouse",
     "Land",
   ] as const;
 
-  const { mutate: createListing } = useCreateProperty();
+  // Payment periods
+  const paymentPeriods = ["month", "year", "semester"] as const;
+
+  // Furnishing options
+  const furnishingOptions = [
+    "Furnished",
+    "Unfurnished",
+    "Partially Furnished",
+  ] as const;
+
+  // Internet options
+  const internetOptions = ["Included", "Available", "Not Available"] as const;
+
+  // Parking options
+  const parkingOptions = [
+    "Available",
+    "Not Available",
+    "Street Parking",
+  ] as const;
+
+  const { mutate: createListing, status } = useCreateProperty();
 
   const onSubmit = async (data: PropertyFormData) => {
-    await createListing({
+    const propertyData = {
       ...data,
       id: Date.now(),
       price: Number(data.price),
       bedrooms: Number(data.bedrooms),
       bathrooms: Number(data.bathrooms),
-    });
+      deposit: Number(data.deposit),
+      minimumStay: Number(data.minimumStay),
+      imageUrl: data.imageUrl || "",
+      nearbyFacilities: data.nearbyFacilities.map((facility) => ({
+        name: facility.name,
+        distance: facility.distance,
+        type: facility.type,
+      })),
+      propertyType: data.propertyType as PropertyType,
+    };
+
+    await createListing(propertyData);
+    if (status === "success") {
+      toast.success("Listing created successfully");
+      handleDialogClose();
+    } else {
+      toast.error("Failed to create listing");
+    }
   };
 
   const handleDialogClose = () => {
@@ -166,41 +264,112 @@ export default function CreateListingModal({
                 control={control}
                 render={({ field }) => (
                   <div className="space-y-2">
-                    <CldUploadWidget
-                      uploadPreset="NIBO_UPLOAD"
-                      onSuccess={(result) => {
-                        if (
-                          result.info &&
-                          typeof result.info === "object" &&
-                          "secure_url" in result.info
-                        ) {
-                          field.onChange(result.info.secure_url);
-                        }
-                      }}
-                    >
-                      {({ open }) => (
-                        <div
-                          onClick={() => open()}
-                          className="relative cursor-pointer hover:opacity-70 transition border-dashed border-2 p-20 border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600"
-                        >
-                          <Upload size={50} />
-                          <div className="font-semibold text-lg">
-                            Click to upload
-                          </div>
-                        </div>
+                    <div className="relative">
+                      <input
+                        type="file"
+                        id="image"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+
+                          // Validate file size (5MB limit)
+                          if (file.size > 5 * 1024 * 1024) {
+                            setUploadError("File size must be less than 5MB");
+                            return;
+                          }
+
+                          // Validate file type
+                          if (!file.type.startsWith("image/")) {
+                            setUploadError("Please upload an image file");
+                            return;
+                          }
+
+                          setIsUploading(true);
+                          setUploadError(null);
+
+                          try {
+                            const formData = new FormData();
+                            formData.append("file", file);
+                            formData.append("upload_preset", "EASYCRIB_UPLOAD");
+
+                            const response = await fetch(
+                              `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+                              {
+                                method: "POST",
+                                body: formData,
+                              }
+                            );
+
+                            if (!response.ok) {
+                              throw new Error("Upload failed");
+                            }
+
+                            const data = await response.json();
+                            if (data.secure_url) {
+                              field.onChange(data.secure_url);
+                            }
+                          } catch (error) {
+                            console.error("Upload error:", error);
+                            setUploadError(
+                              "Failed to upload image. Please try again."
+                            );
+                          } finally {
+                            setIsUploading(false);
+                          }
+                        }}
+                      />
+                      <label
+                        htmlFor="image"
+                        className={`relative cursor-pointer transition-all duration-200 border-2 border-dashed rounded-lg p-8 flex flex-col justify-center items-center gap-4 text-neutral-600 hover:border-primary/50 hover:bg-primary/5 ${
+                          isUploading ? "opacity-50 cursor-not-allowed" : ""
+                        } ${
+                          uploadError ? "border-red-500" : "border-neutral-300"
+                        }`}
+                      >
+                        {isUploading ? (
+                          <>
+                            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                            <div className="font-semibold text-lg text-primary">
+                              Uploading...
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <Upload size={50} className="text-neutral-400" />
+                            <div className="text-center">
+                              <div className="font-semibold text-lg mb-1">
+                                Click to upload
+                              </div>
+                              <p className="text-sm text-neutral-500">
+                                PNG, JPG up to 5MB
+                              </p>
+                            </div>
+                          </>
+                        )}
+                      </label>
+                      {uploadError && (
+                        <p className="mt-2 text-sm text-red-600">
+                          {uploadError}
+                        </p>
                       )}
-                    </CldUploadWidget>
+                    </div>
                     {field.value && (
-                      <div className="relative w-full h-[200px] rounded-lg overflow-hidden">
+                      <div className="relative w-full h-[200px] rounded-lg overflow-hidden group">
                         <img
                           src={field.value}
                           alt="Property"
                           className="object-cover w-full h-full"
                         />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <button
                           type="button"
-                          onClick={() => field.onChange("")}
-                          className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
+                          onClick={() => {
+                            field.onChange("");
+                            setUploadError(null);
+                          }}
+                          className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition opacity-0 group-hover:opacity-100"
                         >
                           <X size={20} />
                         </button>
@@ -454,6 +623,348 @@ export default function CreateListingModal({
                   )}
                 />
               </div>
+            </div>
+
+            {/* Payment Period */}
+            <div>
+              <Label htmlFor="paymentPeriod" className="mb-1">
+                Payment Period*
+              </Label>
+              <Controller
+                name="paymentPeriod"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger
+                      id="paymentPeriod"
+                      className={errors.paymentPeriod ? "border-red-500" : ""}
+                    >
+                      <SelectValue placeholder="Select payment period" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {paymentPeriods.map((period) => (
+                        <SelectItem key={period} value={period}>
+                          {period.charAt(0).toUpperCase() + period.slice(1)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.paymentPeriod && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.paymentPeriod.message}
+                </p>
+              )}
+            </div>
+
+            {/* Furnishing Status */}
+            <div>
+              <Label htmlFor="furnishing" className="mb-1">
+                Furnishing Status*
+              </Label>
+              <Controller
+                name="furnishing"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger
+                      id="furnishing"
+                      className={errors.furnishing ? "border-red-500" : ""}
+                    >
+                      <SelectValue placeholder="Select furnishing status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {furnishingOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.furnishing && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.furnishing.message}
+                </p>
+              )}
+            </div>
+
+            {/* Internet Status */}
+            <div>
+              <Label htmlFor="internet" className="mb-1">
+                Internet Status*
+              </Label>
+              <Controller
+                name="internet"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger
+                      id="internet"
+                      className={errors.internet ? "border-red-500" : ""}
+                    >
+                      <SelectValue placeholder="Select internet status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {internetOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.internet && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.internet.message}
+                </p>
+              )}
+            </div>
+
+            {/* Parking Status */}
+            <div>
+              <Label htmlFor="parking" className="mb-1">
+                Parking Status*
+              </Label>
+              <Controller
+                name="parking"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger
+                      id="parking"
+                      className={errors.parking ? "border-red-500" : ""}
+                    >
+                      <SelectValue placeholder="Select parking status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {parkingOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.parking && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.parking.message}
+                </p>
+              )}
+            </div>
+
+            {/* Bills Included */}
+            <div>
+              <Label htmlFor="billsIncluded" className="mb-1">
+                Bills Included
+              </Label>
+              <Controller
+                name="billsIncluded"
+                control={control}
+                render={({ field }) => (
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="billsIncluded"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                    <Label htmlFor="billsIncluded">
+                      Bills are included in the rent
+                    </Label>
+                  </div>
+                )}
+              />
+            </div>
+
+            {/* Deposit */}
+            <div>
+              <Label htmlFor="deposit" className="mb-1">
+                Deposit Amount
+              </Label>
+              <Controller
+                name="deposit"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="deposit"
+                    type="number"
+                    min="0"
+                    placeholder="Enter deposit amount"
+                    className={errors.deposit ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.deposit && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.deposit.message}
+                </p>
+              )}
+            </div>
+
+            {/* Minimum Stay */}
+            <div>
+              <Label htmlFor="minimumStay" className="mb-1">
+                Minimum Stay (months)
+              </Label>
+              <Controller
+                name="minimumStay"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="minimumStay"
+                    type="number"
+                    min="1"
+                    placeholder="Enter minimum stay period"
+                    className={errors.minimumStay ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.minimumStay && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.minimumStay.message}
+                </p>
+              )}
+            </div>
+
+            {/* Available From */}
+            <div>
+              <Label htmlFor="availableFrom" className="mb-1">
+                Available From
+              </Label>
+              <Controller
+                name="availableFrom"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="availableFrom"
+                    type="date"
+                    className={errors.availableFrom ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.availableFrom && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.availableFrom.message}
+                </p>
+              )}
+            </div>
+
+            {/* Landlord Name */}
+            <div>
+              <Label htmlFor="landlord.name" className="mb-1">
+                Landlord Name
+              </Label>
+              <Controller
+                name="landlord.name"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="landlord.name"
+                    placeholder="Enter landlord name"
+                    className={errors.landlord?.name ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.landlord?.name && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.landlord.name.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="landlord.phone" className="mb-1">
+                Landlord Phone Number
+              </Label>
+              <Controller
+                name="landlord.phone"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="landlord.phone"
+                    placeholder="Enter landlord phone number"
+                    className={errors.landlord?.phone ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.landlord?.phone && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.landlord.phone.message}
+                </p>
+              )}
+            </div>
+            {/* Distance to University */}
+            <div>
+              <Label htmlFor="distanceToUniversity" className="mb-1">
+                Distance to University
+              </Label>
+              <Controller
+                name="distanceToUniversity"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="distanceToUniversity"
+                    placeholder="e.g., 5 minutes walk"
+                    className={
+                      errors.distanceToUniversity ? "border-red-500" : ""
+                    }
+                  />
+                )}
+              />
+              {errors.distanceToUniversity && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.distanceToUniversity.message}
+                </p>
+              )}
+            </div>
+
+            {/* Nearest University */}
+            <div>
+              <Label htmlFor="nearestUniversity" className="mb-1">
+                Nearest University
+              </Label>
+              <Controller
+                name="nearestUniversity"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="nearestUniversity"
+                    placeholder="Enter nearest university"
+                    className={errors.nearestUniversity ? "border-red-500" : ""}
+                  />
+                )}
+              />
+              {errors.nearestUniversity && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.nearestUniversity.message}
+                </p>
+              )}
             </div>
           </div>
 

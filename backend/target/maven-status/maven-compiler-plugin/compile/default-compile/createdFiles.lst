@@ -1,4 +1,6 @@
 com\easycrib\model\House.class
+com\easycrib\model\House$LandlordInfo.class
+com\easycrib\model\House$NearbyFacility.class
 com\easycrib\EasyCribApplication.class
 com\easycrib\repository\HouseRepository.class
 com\easycrib\controller\HouseController.class

@@ -9,6 +9,7 @@ import { FiltersProvider } from "@/lib/filters-context";
 import { useUser } from "@clerk/nextjs";
 import CreateListingModal from "@/components/create-listing-modal";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function ListingsPage() {
   const { isSignedIn } = useUser();
@@ -27,14 +28,16 @@ export default function ListingsPage() {
                 Browse and filter through available student accommodations
               </p>
             </div>
-            {isSignedIn && (
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="px-4 py-2 bg-primary text-white rounded cursor-pointer"
-              >
-                Create Listing
-              </button>
-            )}
+            <button
+              onClick={() =>
+                isSignedIn
+                  ? setIsModalOpen(true)
+                  : toast.error("Please sign in to create a listing")
+              }
+              className="px-4 py-2 bg-primary text-white rounded cursor-pointer"
+            >
+              Create Listing
+            </button>
           </div>
           <Separator />
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
