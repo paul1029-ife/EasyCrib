@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Menu, X } from "lucide-react";
 import { useState } from "react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 
 export default function Header() {
@@ -23,7 +28,8 @@ export default function Header() {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[240px] sm:w-[300px]">
+            <SheetContent side="left" className="w-[240px] sm:w-[300px] p-3">
+              <SheetTitle>EasyCrib</SheetTitle>
               <nav className="flex flex-col gap-4 mt-8">
                 <Link href="/" className="text-lg font-semibold">
                   Home
@@ -31,17 +37,11 @@ export default function Header() {
                 <Link href="/listings" className="text-lg font-semibold">
                   Listings
                 </Link>
-                <Link href="#" className="text-lg font-semibold">
-                  Universities
+                <Link href="/favorites" className="text-lg font-semibold">
+                  Favorites
                 </Link>
                 <Link href="/how-it-works" className="text-lg font-semibold">
                   How It Works
-                </Link>
-                <Link href="#" className="text-lg font-semibold">
-                  About Us
-                </Link>
-                <Link href="#" className="text-lg font-semibold">
-                  Contact
                 </Link>
               </nav>
             </SheetContent>

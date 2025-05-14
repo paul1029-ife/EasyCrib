@@ -1,5 +1,6 @@
 import { Property } from "@/lib/hooks/use-properties";
 import { createContext, useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface FavoritesContextType {
   favorites: Property[];
@@ -37,6 +38,7 @@ export const FavoritesProvider = ({
       JSON.stringify(favorites.filter((l) => l.id !== listing.id))
     );
     setFavorites(favorites.filter((l) => l.id !== listing.id));
+    toast.success("Listing removed from favorites");
   };
 
   return (
