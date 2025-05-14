@@ -1,13 +1,5 @@
 "use client";
-import {
-  Home,
-  DollarSign,
-  MapPin,
-  FileText,
-  X,
-  Upload,
-  Loader2,
-} from "lucide-react";
+import { Home, MapPin, FileText, X, Upload, Loader2 } from "lucide-react";
 import { useForm, Controller, ControllerRenderProps } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -125,6 +117,7 @@ export default function CreateListingModal({
       availableFrom: "",
       landlord: {
         name: "",
+        phone: "",
         responseRate: 0,
         responseTime: "24 hours",
       },
@@ -427,11 +420,11 @@ export default function CreateListingModal({
             {/* Price */}
             <div>
               <Label htmlFor="price" className="mb-1">
-                Price ($)*
+                Price (₦)*
               </Label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                  <DollarSign size={16} className="text-gray-400" />
+                  <span className="text-muted-foreground">₦</span>
                 </div>
                 <Controller
                   name="price"

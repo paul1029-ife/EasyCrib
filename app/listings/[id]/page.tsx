@@ -200,7 +200,9 @@ export default function ListingDetailPage() {
                   <div className="text-3xl font-bold">
                     ₦{listing.price.toLocaleString()}
                   </div>
-                  <div className="text-muted-foreground">per month</div>
+                  <div className="text-muted-foreground">
+                    per {listing.paymentPeriod}
+                  </div>
                 </div>
 
                 <Separator />
@@ -210,10 +212,19 @@ export default function ListingDetailPage() {
                   <p className="text-sm">
                     Available from {listing.availableFrom}
                   </p>
-                  <p className="text-sm">Minimum stay: {listing.minimumStay}</p>
+                  <p className="text-sm">
+                    Minimum stay: {listing.minimumStay} months
+                  </p>
                 </div>
 
-                <Button className="w-full">Contact Landlord</Button>
+                <Button
+                  className="w-full"
+                  onClick={() => {
+                    window.location.href = `tel:${listing?.landlord?.phone}`;
+                  }}
+                >
+                  Contact Landlord
+                </Button>
                 <Button variant="outline" className="w-full">
                   Save to Favorites
                 </Button>

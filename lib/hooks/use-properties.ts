@@ -37,6 +37,7 @@ export interface Property {
   availableFrom: string;
   landlord: {
     name: string;
+    phone: string;
     responseRate: number;
     responseTime: string;
   };
