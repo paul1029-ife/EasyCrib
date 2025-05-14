@@ -93,7 +93,7 @@ export default function ListingsFilters() {
                 value={filters.priceRange}
                 onValueChange={handlePriceRangeChange}
                 min={0}
-                max={1000000}
+                max={4000000}
                 step={50000}
                 className="mt-6"
               />
