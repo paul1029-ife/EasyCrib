@@ -21,10 +21,13 @@ import {
 import { useProperty } from "@/lib/hooks/use-properties";
 import SimilarListings from "@/components/similar-listings";
 import { useParams } from "next/navigation";
+import { useFavorites } from "@/context/use-favorites";
+import { toast } from "sonner";
 
 export default function ListingDetailPage() {
   const params = useParams<{ id: string }>();
   const { data: listing, isLoading, error } = useProperty(Number(params.id));
+  const { addFavorite } = useFavorites();
 
   if (isLoading) {
     return (
@@ -225,7 +228,14 @@ export default function ListingDetailPage() {
                 >
                   Contact Landlord
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    addFavorite(listing);
+                    toast.success("Added to favorites");
+                  }}
+                >
                   Save to Favorites
                 </Button>
 

@@ -57,8 +57,8 @@ export default function Header() {
           <Link href="/listings" className="text-sm font-medium">
             Listings
           </Link>
-          <Link href="#" className="text-sm font-medium">
-            Universities
+          <Link href="/favorites" className="text-sm font-medium">
+            Favorites
           </Link>
           <Link href="/how-it-works" className="text-sm font-medium">
             How It Works
