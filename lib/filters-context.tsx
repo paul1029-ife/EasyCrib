@@ -20,7 +20,7 @@ interface FiltersContextType {
 }
 
 const defaultFilters: Filters = {
-  priceRange: [200000, 600000],
+  priceRange: [0, 1000000],
   billsIncluded: false,
   university: "Any University",
   distanceToUniversity: 2,

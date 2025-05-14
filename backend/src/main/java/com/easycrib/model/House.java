@@ -10,12 +10,13 @@ public class House {
     @Id
     private String id;
     
-    private String title;
+    private String name;
     private String description;
     private Double price;
     private String location;
     private Integer bedrooms;
     private Integer bathrooms;
-    private Double area;
+    private String propertyType;
+    private String amenities;
     private String imageUrl;
 } 
