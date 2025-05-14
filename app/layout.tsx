@@ -23,7 +23,7 @@ export default function RootLayout({
     <ClerkProvider afterSignOutUrl="/">
       <html lang="en">
         <body className={inter.className}>
-          <Toaster />
+          <Toaster position="top-right" />
           <Providers>
             <div className="flex flex-col min-h-screen">
               <Header />
