@@ -1,36 +1,149 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏠 EasyCrib
 
-## Getting Started
+**EasyCrib** is a platform designed to help students and individuals easily find and secure accommodation close to their school. The platform streamlines the search and booking process for school-area housing by offering a simple, fast, and user-friendly experience.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- Browse available accommodations near schools
+- Filter and search based on distance, price, and availability
+- Secure bookings and get real-time status updates
+- Smooth and responsive interface optimized for performance
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend:**
+
+- [Next.js](https://nextjs.org/)
+- [ShadCN UI](https://ui.shadcn.dev/)
+- Tailwind CSS
+
+**Backend:**
+
+- [Spring Boot](https://spring.io/projects/spring-boot)
+- MongoDB (or your chosen database)
+- REST API
+
+---
+
+## 🗂️ Project Structure
+
+```
+
+easycrib/
+├── frontend/   # Next.js + Shadcn frontend
+└── backend/    # Spring Boot backend
+
+````
+
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+
+- Node.js (v18+)
+- Java 17 or later
+- Maven
+- MongoDB (local or cloud)
+- Git
+
+---
+
+## 📦 Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/easycrib.git
+cd easycrib
+````
+
+---
+
+### 2. Run the Backend (Spring Boot)
+
+#### Navigate to the backend folder:
+
+```bash
+cd backend
+```
+
+#### Configure your application:
+
+* Rename `application.example.properties` to `application.properties`
+* Set your MongoDB connection and other environment-specific variables.
+
+#### Build and run the app:
+
+```bash
+./mvnw spring-boot:run
+```
+
+> The backend will run on `http://localhost:8080` by default.
+
+---
+
+### 3. Run the Frontend (Next.js + Shadcn)
+
+#### Navigate to the frontend folder:
+
+```bash
+cd ../frontend
+```
+
+#### Install dependencies:
+
+```bash
+npm install
+```
+
+#### Configure environment variables:
+
+* Create a `.env.local` file in the root of the `frontend` directory.
+* Add the following (adjust as necessary):
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:8080
+```
+
+#### Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> The frontend will run on `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧪 Testing
 
-## Learn More
+* Use Postman or any REST client to test the API endpoints (`http://localhost:8080/api/...`)
+* Access the frontend at `http://localhost:3000` and browse the UI
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📄 License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project is open-source and available under the [MIT License](LICENSE).
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🤝 Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Contributions are welcome! Please open issues or submit pull requests for improvements and new features.
+
+---
+
+## 📬 Contact
+
+Built with 💙 by Group 13.
+For inquiries or feedback, reach out via \[[group13@gmail.com](mailto:paul.agbogun@gmail.com)] or open an issue.
+
+```
+
+---
