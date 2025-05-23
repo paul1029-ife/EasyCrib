@@ -22,6 +22,16 @@ export default function RootLayout({
   return (
     <ClerkProvider afterSignOutUrl="/">
       <html lang="en">
+        <head>
+          <link rel="manifest" href="/manifest.json" />
+          <meta name="theme-color" content="#000000" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta
+            name="description"
+            content="Find your perfect student accommodation"
+          />
+          <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        </head>
         <body className={inter.className}>
           <Toaster position="top-right" />
           <Providers>
