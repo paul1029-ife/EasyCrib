@@ -170,7 +170,7 @@ export default function CreateListingModal({
     "Street Parking",
   ] as const;
 
-  const { mutate: createListing, isPending, isSuccess } = useCreateProperty();
+  const { mutate: createListing, isPending } = useCreateProperty();
 
   const onSubmit = async (data: PropertyFormData) => {
     const propertyData = {
@@ -190,13 +190,15 @@ export default function CreateListingModal({
       propertyType: data.propertyType as PropertyType,
     };
 
-    await createListing(propertyData);
-    if (isSuccess) {
-      toast.success("Listing created successfully");
-      handleDialogClose();
-    } else {
-      toast.error("Failed to create listing");
-    }
+    createListing(propertyData, {
+      onSuccess: () => {
+        toast.success("Listing created successfully");
+        handleDialogClose();
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to create listing");
+      },
+    });
   };
 
   const handleDialogClose = () => {
