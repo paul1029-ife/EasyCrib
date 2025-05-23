@@ -93,7 +93,7 @@ export default function CreateListingModal({
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
@@ -170,7 +170,7 @@ export default function CreateListingModal({
     "Street Parking",
   ] as const;
 
-  const { mutate: createListing, status } = useCreateProperty();
+  const { mutate: createListing, isPending, isSuccess } = useCreateProperty();
 
   const onSubmit = async (data: PropertyFormData) => {
     const propertyData = {
@@ -191,7 +191,7 @@ export default function CreateListingModal({
     };
 
     await createListing(propertyData);
-    if (status === "success") {
+    if (isSuccess) {
       toast.success("Listing created successfully");
       handleDialogClose();
     } else {
@@ -968,12 +968,12 @@ export default function CreateListingModal({
                 type="button"
                 variant="outline"
                 onClick={handleDialogClose}
-                disabled={isSubmitting}
+                disabled={isPending}
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Creating..." : "Create Listing"}
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Creating..." : "Create Listing"}
               </Button>
             </div>
           </DialogFooter>

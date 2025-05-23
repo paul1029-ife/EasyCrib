@@ -229,6 +229,15 @@ export default function ListingDetailPage() {
                   Contact Landlord
                 </Button>
                 <Button
+                  className="w-full"
+                  variant="outline"
+                  onClick={() => {
+                    window.location.href = `https://wa.me/${listing?.landlord?.phone}?text=Hello, I am interested in your property: ${listing.name}`;
+                  }}
+                >
+                  Send A WhatsApp Message
+                </Button>
+                <Button
                   variant="outline"
                   className="w-full"
                   onClick={() => {
